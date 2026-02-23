@@ -24,6 +24,6 @@ def ask_query(q: RAGQuery):
     return {"answer": f"You asked: {q.question}"}
 
 @app.post("/save_question")
-def create_question(q: QuestionCreate):
-    question_id = save_question(q.content)
+async def create_question(q: QuestionCreate):
+    question_id = await save_question(q.content)
     return {"id": question_id}
