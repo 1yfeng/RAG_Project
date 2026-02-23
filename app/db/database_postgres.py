@@ -1,11 +1,12 @@
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
 
-def get_connection():
-    return psycopg2.connect(
+async def get_connection():
+    conn = await psycopg.AsyncConnection.connect(
         host= "localhost",
-        database = "rag_db",
+        dbname = "rag_db",
         user= "postgres",
         password= "postgres",
-        cursor_factory=RealDictCursor
+        row_factory =dict_row
     )
+    return conn

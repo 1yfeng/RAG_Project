@@ -1,16 +1,13 @@
 from app.db.database_postgres import get_connection
 
-def save_question(context: str):
-    conn = get_connection()
-    cursor = conn.cursor()
+async def save_question(context: str):
+    conn = await get_connection()
 
-    cursor.execute("INSERT INTO questions (content) VALUES (%s) RETURNING id;", 
+    async with conn:
+        async with conn.cursor() as cur:
+            await cur.execute("INSERT INTO questions (content) VALUES (%s) RETURNING id;", 
                    (context,)
                    )
-    
-    question_id = cursor.fetchone()['id']
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return question_id
+            result = await cur.fetchone()
+            await conn.commit()
+            return result["id"]
